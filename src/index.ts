@@ -205,7 +205,9 @@ JWTOption<Name, Schema>) => {
 
 	const privateKey =
 		typeof secret === 'string' ? new TextEncoder().encode(secret) : secret
-	const publicKey = typeof privateKey === 'object' && 'd' in privateKey ? Object.assign({}, secret, { d: undefined }) : privateKey
+	const publicKey = typeof privateKey === 'object' && 'd' in privateKey 
+		? (({ d, ...publicJwk }) => publicJwk)(privateKey)
+		: privateKey
 
 	const validator = schema
 		? getSchemaValidator(
